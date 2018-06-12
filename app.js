@@ -1,11 +1,12 @@
 require('dotenv').config()
 const express = require('express')
-const sls = require('serverless-http')
 const app = express()
 
-app.get('/', async (req, res, next) => {
+app.get('/', (req, res, next) => {
   res.status(200).send('Hello World!')
 })
 
-module.exports.server = sls(app)
-module.exports = app
+const port = process.env.PORT || 3000
+app.listen(port, () => 
+  console.log(`Server is listening on port ${port}.`)
+)

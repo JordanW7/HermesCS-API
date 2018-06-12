@@ -2,7 +2,7 @@
   "name": "hermescs-api",
   "version": "1.0.0",
   "description": "",
-  "main": "handler.js",
+  "main": "app.js",
   "scripts": {
     "precommit": "pretty-quick --staged",
     "test": "jest"
@@ -12,8 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^6.0.0",
-    "express": "^4.16.3",
-    "serverless-http": "^1.5.5"
+    "express": "^4.16.3"
   },
   "devDependencies": {
     "eslint": "^4.19.1",
