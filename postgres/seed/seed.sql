@@ -1,4 +1,3 @@
--- Seed data with a fake user for testing
-
-insert into login (hash, email) values ('$2a$10$WAK21U0LWl7C//jJ.DOB2uPP1DJQh7KUDgasdyQeGzkop2Pzl8W7u', 'a@a.com');
-
+insert into databaselist (name, owner, created_at) values ('demo','HermesCS','1995-01-04 09:08:07');
+insert into demo_users (firstname, lastname, email, hash, access, team) values ('demo user', 'user', 'a@a.com', '$2a$10$WAK21U0LWl7C//jJ.DOB2uPP1DJQh7KUDgasdyQeGzkop2Pzl8W7u', 'agent', 'customer services');
+insert into demo_requests (firstname, lastname, account, mobile, home, twitter, facebook, email, address, type, topic, assign_person, assign_team, priority, details, attachments, status, comments, created_by, created_at, updated_at) values ('John','Doe', 'demo', '123', '456', '@Test', 'Facebook', 'john@doe.com', '49 Charles St, Dunedin', 'misc', 'rubbish', 'unassigned', 'Waste', 'Medium', 'please recycle', 'none','current','no comments','James Bond','1999-01-08 01:02:03','1999-01-09 04:05:06');

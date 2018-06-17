@@ -3,7 +3,7 @@ services:
 
   # PostgreSQL
   postgres:
-    container_name: postgres
+    container_name: hermes-postgres
     build: ./postgres
     environment:
       POSTGRES_USER: admin
@@ -16,14 +16,14 @@ services:
 
   # Redis
   redis:
-    container_name: redis
+    container_name: hermes-redis
     image: redis
     ports:
       - "6379:6379"
 
   # Backend
-  smart-brain-api:
-    container_name: backend
+  hermes-cs-api:
+    container_name: hermes-backend
     build: ./
     volumes:
       - ./:/usr/src/hermes-cs-api
