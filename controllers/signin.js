@@ -14,7 +14,15 @@ const createSession = async (user, account) => {
     const { email, id } = user;
     const token = signToken(id, account);
     data = await setToken(token, `${account}_${id}`);
-    return Promise.resolve({ success: "true", id, token, email, account });
+    return Promise.resolve({
+      success: "true",
+      id,
+      token,
+      email: email.toLowerCase(),
+      account,
+      firstname,
+      lastname
+    });
   } catch (err) {
     console.log(err);
   }
@@ -29,17 +37,26 @@ const handleSignin = async (db, bcrypt, req, res) => {
     const data = await db
       .select("email", "hash")
       .from(`${account.toLowerCase()}_users`)
-      .where("email", "=", email);
+      .where("email", "=", email.toLowerCase());
     const isValid = bcrypt.compareSync(password, data[0].hash);
     if (isValid) {
       const user = await db
         .select("*")
         .from(`${account.toLowerCase()}_users`)
-        .where("email", "=", email);
+        .where("email", "=", email.toLowerCase());
+      const dbdata = await db
+        .select("*")
+        .from(databaselist)
+        .where("name", "=", account.toLowerCase());
       return Promise.resolve({
         email: user[0].email,
         id: user[0].id,
-        account: account
+        account: account,
+        firstname: user[0].firstname,
+        lastname: user[0].lastname,
+        access: user[0].access,
+        team: user[0].team,
+        account_display: dbdata[0].displayname
       });
     } else {
       return Promise.reject("wrong credentials");
@@ -64,7 +81,7 @@ const signinAuthentication = async (req, res, db, bcrypt) => {
     const data = await handleSignin(db, bcrypt, req, res);
     //If credentials are valid, create a new session.
     if (data.id && data.email && req.body.account) {
-      const session = await createSession(data, req.body.account);
+      const session = await createSession(data, req.body.account.toLowerCase());
       return res.status(200).json(session);
     }
     return res.json(Promise.reject(data));

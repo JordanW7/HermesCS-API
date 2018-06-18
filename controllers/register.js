@@ -9,7 +9,7 @@ const handleRegister = async (req, res, db, bcrypt) => {
         .insert({
           displayname: account,
           name: account.toLowerCase(),
-          owner: email,
+          owner: email.toLowerCase(),
           created_at: new Date()
         })
         .into("databaselist");
@@ -58,7 +58,7 @@ const handleRegister = async (req, res, db, bcrypt) => {
         .insert({
           firstname: firstname,
           lastname: lastname,
-          email: email,
+          email: email.toLowerCase(),
           hash: hash,
           access: "admin",
           team: "Customer Services"
