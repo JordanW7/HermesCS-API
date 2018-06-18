@@ -1,4 +1,4 @@
-require('dotenv').config()
+// require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt-nodejs');
@@ -8,9 +8,8 @@ const morgan = require('morgan');
 let dump = require("pg");
 const app = express();
 
-
-
 const auth = require('./controllers/auth');
+const register = require('./controllers/register');
 
 //Database Setup
 const db = knex({
@@ -18,15 +17,19 @@ const db = knex({
   connection: process.env.POSTGRES_URI
 });
 
-const whitelist = ['*'];
+// const whitelist = ['http://localhost:3000'];
+// const corsOptions = {
+//   origin: function (origin, callback) {
+//     if (whitelist.indexOf(origin) !== -1) {
+//       callback(null, true)
+//     } else {
+//       callback(new Error('Not allowed by CORS'))
+//     }
+//   }
+// }
+
 const corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  }
+  origin: "*"
 }
 
 app.use(morgan('combined'));
