@@ -60,7 +60,7 @@ const handleRegister = async (req, res, db, bcrypt) => {
   res.status(200).json(account)
   }
   catch(err) { 
-    console.log("Error: " + err)
+    console.log(err)
     res.status(400).json('unable to register')
   }
 }

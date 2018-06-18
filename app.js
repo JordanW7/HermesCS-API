@@ -9,7 +9,7 @@ const morgan = require('morgan');
 let dump = require("pg");
 const app = express();
 
-const auth = require('./controllers/auth');
+// const auth = require('./controllers/auth');
 const register = require('./controllers/register');
 const signin = require('./controllers/signin');
 

@@ -48,14 +48,15 @@ const signinAuthentication = async (req, res, db, bcrypt) => {
       if (reply) { return res.json({reply}) }
     });
   }
-  //Person has not got a valid token, check their credentials
   try {
+    //Person has not got a valid token, check their credentials
     const data = await handleSignin(db, bcrypt, req, res);
-    //If credentials are valid, create a new session. Otherwise, reject.
+    //If credentials are valid, create a new session.
     if (data.id && data.email && req.body.account) { 
       const session = await createSession(data, req.body.account);
       return res.status(200).json(session)
     }
+    //Credentials are bad
     return res.json(Promise.reject(data))
   } catch (err) {
     res.status(400).json(err)
