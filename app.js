@@ -6,8 +6,6 @@ const cors = require("cors");
 const knex = require("knex");
 const morgan = require("morgan");
 
-const test = "HELLO";
-
 let dump = require("pg");
 const app = express();
 

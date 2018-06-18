@@ -59,13 +59,19 @@ const signinAuthentication = async (req, res, db, bcrypt) => {
   const { authorization } = req.headers;
   //Has the person got a token, if so check the token before checking credentials
   if (authorization) {
-    redisClient.get(authorization, (err, reply) => {
+    return redisClient.get(authorization, (err, reply) => {
       if (reply) {
-        return res.json({ reply });
+        console.log(reply);
+        return res.json(reply);
+      } else {
+        console.log(err);
       }
     });
+    //code is continuing on from here when it should return.
+    //appears to be fixed - check the example code to confirm.
   }
   try {
+    console.log("WHY?");
     //Person has not got a valid token, check their credentials
     const data = await handleSignin(db, bcrypt, req, res);
     //If credentials are valid, create a new session.
