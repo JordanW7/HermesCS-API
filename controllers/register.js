@@ -6,13 +6,14 @@ const handleRegister = async (req, res, db, bcrypt) => {
   try {
   const acctrx = await db.transaction(trx => {
       return trx.insert({
-        name: account,
+        displayname: account,
+        name: account.toLowerCase(),
         owner: email,
         created_at: new Date()
       })
       .into('databaselist')
   })
-  const addRequestsTable = await db.schema.createTable(`${account}_requests`,(table) => {
+  const addRequestsTable = await db.schema.createTable(`${account.toLowerCase()}_requests`,(table) => {
     table.increments();
     table.string('firstname');
     table.string('lastname');
@@ -35,7 +36,7 @@ const handleRegister = async (req, res, db, bcrypt) => {
     table.string('user');
     table.timestamps();
   })
-  const addUserTable = await db.schema.createTable(`${account}_users`,(table) => {
+  const addUserTable = await db.schema.createTable(`${account.toLowerCase()}_users`,(table) => {
     table.increments();
     table.string('firstname');
     table.string('lastname');
