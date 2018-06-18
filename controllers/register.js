@@ -8,7 +8,7 @@ const handleRegister = async (req, res, db, bcrypt) => {
       return trx
         .insert({
           displayname: account,
-          name: account.toLowerCase(),
+          account: account.toLowerCase(),
           owner: email.toLowerCase(),
           created_at: new Date()
         })

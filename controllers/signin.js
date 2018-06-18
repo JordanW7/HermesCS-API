@@ -11,7 +11,7 @@ const setToken = (key, value) => Promise.resolve(redisClient.set(key, value));
 
 const createSession = async (user, account) => {
   try {
-    const { email, id } = user;
+    const { id, email } = user;
     const token = signToken(id, account);
     data = await setToken(token, `${account}_${id}`);
     return Promise.resolve({
@@ -19,9 +19,7 @@ const createSession = async (user, account) => {
       id,
       token,
       email: email.toLowerCase(),
-      account,
-      firstname,
-      lastname
+      account
     });
   } catch (err) {
     console.log(err);
@@ -44,19 +42,10 @@ const handleSignin = async (db, bcrypt, req, res) => {
         .select("*")
         .from(`${account.toLowerCase()}_users`)
         .where("email", "=", email.toLowerCase());
-      const dbdata = await db
-        .select("*")
-        .from(databaselist)
-        .where("name", "=", account.toLowerCase());
       return Promise.resolve({
         email: user[0].email,
         id: user[0].id,
-        account: account,
-        firstname: user[0].firstname,
-        lastname: user[0].lastname,
-        access: user[0].access,
-        team: user[0].team,
-        account_display: dbdata[0].displayname
+        account: account
       });
     } else {
       return Promise.reject("wrong credentials");
