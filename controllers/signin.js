@@ -7,13 +7,17 @@ const signToken = (id, account) => {
   return jwt.sign(jwtPayload, "JWT_SECRET_KEY", { expiresIn: "7 days" });
 };
 
-const setToken = (key, value) => Promise.resolve(redisClient.set(key, value));
+const setToken = async (key, account, id) => {
+  const setAccount = await redisClient.hset(key, "account", account);
+  const setID = await redisClient.hset(key, "id", id);
+  return Promise.resolve(setID);
+};
 
 const createSession = async (user, account) => {
   try {
     const { id, email } = user;
     const token = signToken(id, account);
-    data = await setToken(token, `${account}_${id}`);
+    data = await setToken(token, account, id);
     return Promise.resolve({
       success: "true",
       id,
@@ -57,22 +61,19 @@ const handleSignin = async (db, bcrypt, req, res) => {
 
 const signinAuthentication = async (req, res, db, bcrypt) => {
   const { authorization } = req.headers;
-  //Has the person got a token, if so check the token before checking credentials
-  if (authorization) {
-    return redisClient.get(authorization, (err, reply) => {
-      if (reply) {
-        console.log(reply);
-        return res.json(reply);
-      } else {
-        console.log(err);
-      }
-    });
-    //code is continuing on from here when it should return.
-    //appears to be fixed - check the example code to confirm.
-  }
   try {
-    console.log("WHY?");
-    //Person has not got a valid token, check their credentials
+    //Has the person sent a token, if so check the token
+    if (authorization) {
+      return redisClient.hgetall(authorization, (err, reply) => {
+        if (reply) {
+          return res.status(200).json(reply);
+        } else {
+          console.log(err);
+          return res.status(400).json(err);
+        }
+      });
+    }
+    //Person has not sent a token, check their credentials
     const data = await handleSignin(db, bcrypt, req, res);
     //If credentials are valid, create a new session.
     if (data.id && data.email && req.body.account) {
