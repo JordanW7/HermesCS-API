@@ -15,11 +15,13 @@ const signin = require("./controllers/signin");
 const signout = require("./controllers/signout");
 const profile = require("./controllers/profile");
 
+//Change for deploy
 const db = knex({
   client: "pg",
   connection: process.env.POSTGRES_URI
 });
 
+//Change for deploy
 const whitelist = ["http://localhost:3001"];
 const corsOptions = {
   origin: function(origin, callback) {
@@ -34,10 +36,6 @@ const corsOptions = {
 app.use(morgan("combined"));
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
-
-app.get("/", (req, res, next) => {
-  res.status(200).send("Hello World!");
-});
 
 app.post("/register", (req, res) => {
   register.handleRegister(req, res, db, bcrypt);

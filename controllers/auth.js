@@ -1,13 +1,16 @@
-const redisClient = require('./signin').redisClient;
+const redisClient = require("./signin").redisClient;
 
 const requireAuth = (req, res, next) => {
   const { authorization } = req.headers;
   if (!authorization) {
-    return res.status(401).send('Unauthorized');
+    return res.status(401).send("Unauthorized");
   }
-  return redisClient.get(authorization, (err, reply) => {
+  return redisClient.hgetall(authorization, (err, reply) => {
     if (err || !reply) {
-      return res.status(401).send('Unauthorized');
+      if (err) {
+        console.log(err);
+      }
+      return res.status(401).send("Unauthorized");
     }
     return next();
   });
@@ -15,4 +18,4 @@ const requireAuth = (req, res, next) => {
 
 module.exports = {
   requireAuth
-}
+};

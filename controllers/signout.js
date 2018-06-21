@@ -1,9 +1,10 @@
 const redisClient = require("./signin").redisClient;
 
-const handleSignout = (req, res) => {
+const handleSignout = async (req, res) => {
   const { authorization } = req.headers;
   try {
-    //Use redis to delete the token
+    const response = await redisClient.del(authorization);
+    return res.status(200).json(response);
   } catch (err) {
     return res.status(200).json("signout error");
   }

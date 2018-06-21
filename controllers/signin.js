@@ -68,7 +68,6 @@ const signinAuthentication = async (req, res, db, bcrypt) => {
         if (reply) {
           return res.status(200).json(reply);
         } else {
-          console.log(err);
           return res.status(400).json(err);
         }
       });
