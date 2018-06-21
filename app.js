@@ -14,6 +14,7 @@ const register = require("./controllers/register");
 const signin = require("./controllers/signin");
 const signout = require("./controllers/signout");
 const profile = require("./controllers/profile");
+const requests = require("./controllers/requests");
 
 //Change for deploy
 const db = knex({
@@ -48,6 +49,9 @@ app.post("/signout", auth.requireAuth, (req, res) => {
 });
 app.get("/profile/:account/:id", auth.requireAuth, (req, res) => {
   profile.handleProfileGet(req, res, db);
+});
+app.get("/requests/:account/:id/", auth.requireAuth, (req, res) => {
+  requests.handleRequestGet(req, res, db);
 });
 
 const port = process.env.PORT || 3000;
