@@ -6,7 +6,6 @@ const handleRequestGet = async (req, res, db) => {
       .from(`${account.toLowerCase()}_requests`)
       .where({ id });
     if (request.length) {
-      console.log("REQUEST INFO", request);
       const response = {
         id: request[0].id,
         firstname: request[0].firstname,
