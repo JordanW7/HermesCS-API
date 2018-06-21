@@ -63,7 +63,28 @@ const handleRegister = async (req, res, db, bcrypt) => {
           access: "admin",
           team: "Customer Services"
         })
-        .into(`${account}_users`);
+        .into(`${account.toLowerCase()}_users`);
+    });
+    const addTeamTable = await db.schema.createTable(
+      `${account.toLowerCase()}_teams`,
+      table => {
+        table.increments();
+        table.string("team");
+        table.string("leader");
+        //maybe need to use table.specificType(name, type) here - to test
+        table.string("members");
+        table.string("assignments");
+      }
+    );
+    const teamtrx = await db.transaction(trx => {
+      return trx
+        .insert({
+          team: account,
+          leader: `${firstname} ${lastname}`,
+          //This line also needs testing for array
+          members: `{{'${firstname} ${lastname}','${email.toLowerCase()}'}}`
+        })
+        .into(`${account.toLowerCase}_teams`);
     });
     res.status(200).json(account);
   } catch (err) {

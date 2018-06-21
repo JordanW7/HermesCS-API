@@ -53,6 +53,9 @@ app.get("/profile/:account/:id", auth.requireAuth, (req, res) => {
 app.get("/requests/:account/:id/", auth.requireAuth, (req, res) => {
   requests.handleRequestGet(req, res, db);
 });
+app.get("/requestcomments", auth.requireAuth, (req, res) => {
+  requests.handleCommentsGet(req, res);
+});
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Server is listening on port ${port}.`));
