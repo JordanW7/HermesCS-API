@@ -15,6 +15,7 @@ const signin = require("./controllers/signin");
 const signout = require("./controllers/signout");
 const profile = require("./controllers/profile");
 const requests = require("./controllers/requests");
+const teams = require("./controllers/teams");
 
 //Change for deploy
 const db = knex({
@@ -53,8 +54,11 @@ app.get("/profile/:account/:id", auth.requireAuth, (req, res) => {
 app.get("/requests/:account/:id/", auth.requireAuth, (req, res) => {
   requests.handleRequestGet(req, res, db);
 });
-app.get("/requestcomments", auth.requireAuth, (req, res) => {
-  requests.handleCommentsGet(req, res);
+app.post("/addrequestcomments", auth.requireAuth, (req, res) => {
+  requests.handleCommentsAdd(req, res, db);
+});
+app.get("/teams/:account", auth.requireAuth, (req, res) => {
+  teams.handleTeamsGet(req, res, db);
 });
 
 const port = process.env.PORT || 3000;
