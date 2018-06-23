@@ -57,6 +57,9 @@ app.get("/requests/:account/:id/", auth.requireAuth, (req, res) => {
 app.post("/addrequestcomments", auth.requireAuth, (req, res) => {
   requests.handleCommentsAdd(req, res, db);
 });
+app.post("/updaterequest", auth.requireAuth, (req, res) => {
+  requests.handleRequestUpdate(req, res, db);
+});
 app.get("/teams/:account", auth.requireAuth, (req, res) => {
   teams.handleTeamsGet(req, res, db);
 });

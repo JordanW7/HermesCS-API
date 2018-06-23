@@ -61,7 +61,15 @@ const handleCommentsAdd = async (req, res, db) => {
   }
 };
 
+const handleRequestUpdate = async (req, res, db) => {
+  //For any changes, update the database.
+  //Also add a comment that the change has happened.
+  //If the assignment has been changed, add notification to Team and/or User.
+  res.json(req.body);
+};
+
 module.exports = {
   handleRequestGet,
-  handleCommentsAdd
+  handleCommentsAdd,
+  handleRequestUpdate
 };
