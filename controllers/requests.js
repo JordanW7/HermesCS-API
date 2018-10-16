@@ -61,11 +61,84 @@ const handleCommentsAdd = async (req, res, db) => {
   }
 };
 
+const updateAddComment = async (db, account, id, comments, team, user) => {
+  try {
+    const response = await db.transaction(trx => {
+      return trx
+        .insert({
+          comments: comments,
+          team: team,
+          created_at: new Date(),
+          created_by: `${user.firstname} ${user.lastname}`
+        })
+        .into(`${account}_${id}_comments`);
+    });
+    return true;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};
+
 const handleRequestUpdate = async (req, res, db) => {
-  //For any changes, update the database.
-  //Also add a comment that the change has happened.
-  //If the assignment has been changed, add notification to Team and/or User.
-  res.json(req.body);
+  const { id, user, assign_team, assign_person, status, priority } = req.body;
+  const { account, team } = user;
+  try {
+    //Compare the provided data with the current data, adding a comment for any changes.
+    const request = await db
+      .select("*")
+      .from(`${account.toLowerCase()}_requests`)
+      .where({ id });
+    if (request[0].assign_team != assign_team && assign_team) {
+      let comments = `[USER UPDATED] Changed Assigned Team from '${
+        request[0].assign_team
+      }' to '${assign_team}'.`;
+      updateAddComment(db, account, id, comments, team, user);
+      //Also add team/user notification
+    }
+    if (request[0].assign_person != assign_person && assign_person) {
+      let comments = `[USER UPDATED] Changed Assigned Person from '${
+        request[0].assign_person
+      }' to '${assign_person}'.`;
+      updateAddComment(db, account, id, comments, team, user);
+      //Also add team/user notification
+    }
+    if (request[0].status != status && status) {
+      let comments = `[USER UPDATED] Changed Status from '${
+        request[0].status
+      }' to '${status}'.`;
+      updateAddComment(db, account, id, comments, team, user);
+    }
+    if (request[0].priority != priority && priority) {
+      let comments = `[USER UPDATED] Changed Priority from '${
+        request[0].priority
+      }' to '${priority}'.`;
+      updateAddComment(db, account, id, comments, team, user);
+    }
+    //Update the database with the new information
+    if (!assign_team) {
+      const assign_team = request[0].assign_team;
+    }
+    if (!assign_person) {
+      const assign_person = request[0].assign_person;
+    }
+    if (!priority) {
+      const priority = request[0].priority;
+    }
+    if (!status) {
+      const status = request[0].status;
+    }
+    const response = await db.transaction(trx => {
+      return trx
+        .from(`${account.toLowerCase()}_requests`)
+        .where({ id })
+        .update({ assign_team, assign_person, priority, status });
+    });
+    res.json("Request Updated");
+  } catch (err) {
+    console.log(err);
+    res.status(400).json("error updating request");
+  }
 };
 
 module.exports = {
