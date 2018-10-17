@@ -1,5 +1,6 @@
 insert into databaselist (displayname, account, owner, created_at) values ('Demo Company','demo','HermesCS','1995-01-04 09:08:07');
 insert into demo_teams (team, leader, members) values ('Customer Services', 'Michael Davis','{{"Visitor user","a@a.com"},{"Michael Davis","m@m.com"}}');
+insert into demo_teams (team, leader, members) values ('Customer Services', 'James Matthew','{{"James Matthew","j@j.com"},{"Peter Gold","p@p.com"}}');
 insert into demo_users (firstname, lastname, email, hash, access, team) values ('Visitor', 'user', 'a@a.com', '$2a$10$WAK21U0LWl7C//jJ.DOB2uPP1DJQh7KUDgasdyQeGzkop2Pzl8W7u', 'agent', 'Customer Services');
 insert into demo_users (firstname, lastname, email, hash, access, team) values ('Michael', 'Davis', 'b@b.com', '$2a$10$WAK21U0LWl7C//jJ.DOB2uPP1DJQh7KUDgasdyQeGzkop2Pzl8W7u', 'teamleader', 'Customer Services');
 insert into demo_requests (firstname, lastname, mobile, home, twitter, facebook, email, address, type, topic, assign_team, priority, details, status, created_by, created_at, updated_at) values ('John','Doe', '123', '456', '@Test', 'Facebook', 'john@doe.com', '49 Charles St, Dunedin', 'misc', 'rubbish', 'Waste', 'medium', 'please recycle','current','James Bond','1999-01-08 01:02:03','1999-01-09 04:05:06');
