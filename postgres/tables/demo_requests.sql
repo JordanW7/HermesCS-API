@@ -17,12 +17,9 @@ CREATE TABLE demo_requests (
 	assign_team text NOT NULL,
 	priority text NOT NULL,
 	details text NOT NULL,
-	attachments text,
 	status text NOT NULL,
-	comments text[],
 	created_by text NOT NULL,
-	created_at timestamp NOT NULL,
-	updated_at timestamp
+	created_at timestamp NOT NULL
 );
 
 COMMIT;
