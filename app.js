@@ -15,6 +15,7 @@ const signin = require("./controllers/signin");
 const signout = require("./controllers/signout");
 const profile = require("./controllers/profile");
 const requests = require("./controllers/requests");
+const newrequest = require("./controllers/newrequest");
 const teams = require("./controllers/teams");
 
 //Change for deploy
@@ -39,6 +40,15 @@ app.use(morgan("combined"));
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
+app.get("/profile/:account/:id", auth.requireAuth, (req, res) => {
+  profile.handleProfileGet(req, res, db);
+});
+app.get("/requests/:account/:id/", auth.requireAuth, (req, res) => {
+  requests.handleRequestGet(req, res, db);
+});
+app.get("/teams/:account", auth.requireAuth, (req, res) => {
+  teams.handleTeamsGet(req, res, db);
+});
 app.post("/register", (req, res) => {
   register.handleRegister(req, res, db, bcrypt);
 });
@@ -48,20 +58,14 @@ app.post("/signin", (req, res) => {
 app.post("/signout", auth.requireAuth, (req, res) => {
   signout.handleSignout(req, res);
 });
-app.get("/profile/:account/:id", auth.requireAuth, (req, res) => {
-  profile.handleProfileGet(req, res, db);
-});
-app.get("/requests/:account/:id/", auth.requireAuth, (req, res) => {
-  requests.handleRequestGet(req, res, db);
-});
 app.post("/addrequestcomments", auth.requireAuth, (req, res) => {
   requests.handleCommentsAdd(req, res, db);
 });
 app.post("/updaterequest", auth.requireAuth, (req, res) => {
   requests.handleRequestUpdate(req, res, db);
 });
-app.get("/teams/:account", auth.requireAuth, (req, res) => {
-  teams.handleTeamsGet(req, res, db);
+app.post("/newrequest", auth.requireAuth, (req, res) => {
+  newrequest.handleNewRequest(req, res, db);
 });
 
 const port = process.env.PORT || 3000;

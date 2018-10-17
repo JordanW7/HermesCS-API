@@ -94,7 +94,7 @@ const handleRequestUpdate = async (req, res, db) => {
         request[0].assign_team
       }' to '${assign_team}'.`;
       updateAddComment(db, account, id, comments, team, user);
-      //Also add team/user notification
+      //TO DO: Also add team/user notification
     }
     if (request[0].assign_person != assign_person && assign_person) {
       let comments = `[USER UPDATED] Changed Assigned Person from '${
