@@ -3,7 +3,7 @@ const handleNewRequest = async (req, res, db) => {
     account,
     firstname,
     lastname,
-    useraccount,
+    customer_account,
     mobile,
     home,
     twitter,
@@ -16,7 +16,6 @@ const handleNewRequest = async (req, res, db) => {
     assign_team,
     priority,
     details,
-    status,
     created_by
   } = req.body;
   if (
@@ -27,7 +26,7 @@ const handleNewRequest = async (req, res, db) => {
     !priority ||
     !details ||
     !status ||
-    created_by
+    !created_by
   ) {
     return res.status(400).json("incorrect form submission");
   }
