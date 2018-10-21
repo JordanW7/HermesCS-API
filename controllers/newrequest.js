@@ -68,7 +68,7 @@ const handleNewRequest = async (req, res, db) => {
         table.timestamp("created_at");
       }
     );
-    res.json(`Request Added ${request}`);
+    res.json(request);
   } catch (err) {
     console.log(err);
     res.status(400).json("unable to add");
