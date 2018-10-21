@@ -16,7 +16,8 @@ const handleNewRequest = async (req, res, db) => {
     assign_team,
     priority,
     details,
-    created_by
+    created_by,
+    status
   } = req.body;
   if (
     !account ||
@@ -31,13 +32,13 @@ const handleNewRequest = async (req, res, db) => {
     return res.status(400).json("incorrect form submission");
   }
   try {
-    //Need to add request to the ${account}_requests database
     const request = await db.transaction(trx => {
       return trx
+        .returning("id")
         .insert({
           firstname,
           lastname,
-          useraccount,
+          account: customer_account,
           mobile,
           home,
           twitter,
@@ -56,14 +57,18 @@ const handleNewRequest = async (req, res, db) => {
         })
         .into(`${account}_requests`);
     });
-    console.log(request);
-    //Grab the ID of the new request
-    //Need to create a ${account}_${id}_comments database
-    // const addCommentsTable = await db.schema.createTable(
-    //   `${account.toLowerCase()}_requests`,
-    //   table => {
-    //     table.increments();
-    //     table.string("firstname");
+    const newID = request;
+    const addCommentsTable = await db.schema.createTable(
+      `${account.toLowerCase()}_${newID}_comments`,
+      table => {
+        table.increments();
+        table.string("created_by");
+        table.string("team");
+        table.string("comments");
+        table.timestamp("created_at");
+      }
+    );
+    res.json(`Request Added ${request}`);
   } catch (err) {
     console.log(err);
     res.status(400).json("unable to add");
