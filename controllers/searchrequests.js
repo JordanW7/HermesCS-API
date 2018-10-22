@@ -37,7 +37,7 @@ const handleSearchRequest = async (req, res, db) => {
       .where("address", "like", address ? address : "%")
       .where("type", "like", type ? type : "%")
       .where("topic", "like", topic ? topic : "%")
-      .where("assign_person", "like", assign_person ? assign_person : "%")
+      .where("assign_person", "like", assign_person ? assign_person : "")
       .where("assign_team", "like", assign_team ? assign_team : "%")
       .where("priority", "like", priority ? priority : "%")
       .where("created_by", "like", created_by ? created_by : "%")
