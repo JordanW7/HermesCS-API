@@ -16,6 +16,7 @@ const signout = require("./controllers/signout");
 const profile = require("./controllers/profile");
 const requests = require("./controllers/requests");
 const newrequest = require("./controllers/newrequest");
+const searchrequests = require("./controllers/searchrequests");
 const teams = require("./controllers/teams");
 
 //Change for deploy
@@ -66,6 +67,9 @@ app.post("/updaterequest", auth.requireAuth, (req, res) => {
 });
 app.post("/newrequest", auth.requireAuth, (req, res) => {
   newrequest.handleNewRequest(req, res, db);
+});
+app.post("/searchrequests", auth.requireAuth, (req, res) => {
+  searchrequests.handleSearchRequest(req, res, db);
 });
 
 const port = process.env.PORT || 3000;
