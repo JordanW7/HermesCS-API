@@ -17,6 +17,7 @@ const profile = require("./controllers/profile");
 const requests = require("./controllers/requests");
 const newrequest = require("./controllers/newrequest");
 const searchrequests = require("./controllers/searchrequests");
+const dashboard = require("./controllers/dashboard");
 const teams = require("./controllers/teams");
 
 //Change for deploy
@@ -49,6 +50,9 @@ app.get("/requests/:account/:id/", auth.requireAuth, (req, res) => {
 });
 app.get("/teams/:account", auth.requireAuth, (req, res) => {
   teams.handleTeamsGet(req, res, db);
+});
+app.get("/dashboard/:account/:user", auth.requireAuth, (req, res) => {
+  dashboard.handleDashboardGet(req, res, db);
 });
 app.post("/register", (req, res) => {
   register.handleRegister(req, res, db, bcrypt);
