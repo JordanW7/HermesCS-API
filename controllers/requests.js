@@ -90,21 +90,21 @@ const handleRequestUpdate = async (req, res, db) => {
       .from(`${account.toLowerCase()}_requests`)
       .where({ id });
     if (request[0].assign_team != assign_team && assign_team) {
-      let comments = `[USER UPDATED] Changed Assigned Team from '${
+      let comments = `[CHANGED ASSIGNED TEAM] from '${
         request[0].assign_team
       }' to '${assign_team}'.`;
       updateAddComment(db, account, id, comments, team, user);
       //TO DO: Also add team/user notification
     }
     if (request[0].assign_person != assign_person && assign_person) {
-      let comments = `[USER UPDATED] Changed Assigned Person from '${
+      let comments = `[CHANGED ASSIGNED PERSON] from '${
         request[0].assign_person
       }' to '${assign_person}'.`;
       updateAddComment(db, account, id, comments, team, user);
       //Also add team/user notification
     }
     if (request[0].status != status && status) {
-      let comments = `[USER UPDATED] Changed Status from '${
+      let comments = `[CHANGED STATUS] from '${
         request[0].status
       }' to '${status}'.`;
       updateAddComment(db, account, id, comments, team, user);
