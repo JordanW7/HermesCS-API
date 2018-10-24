@@ -73,16 +73,16 @@ const handleRegister = async (req, res, db, bcrypt) => {
       table => {
         table.increments();
         table.string("team");
-        table.string("fullname");
-        table.string("email");
+        table.string("leader");
+        table.string("members");
       }
     );
     const teamtrx = await db.transaction(trx => {
       return trx
         .insert({
           team: "Customer Services",
-          fullname: `${firstname} ${lastname}`,
-          email: email.toLowerCase()
+          leader: `${firstname} ${lastname}`,
+          members: [[`${firstname} ${lastname}`, email]]
         })
         .into(`${account.toLowerCase()}_teams`);
     });
