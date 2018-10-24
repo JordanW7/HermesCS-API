@@ -74,15 +74,22 @@ const handleRegister = async (req, res, db, bcrypt) => {
         table.increments();
         table.string("team");
         table.string("leader");
-        table.string("members");
+        table.specificType("members", "TEXT[]");
       }
     );
     const teamtrx = await db.transaction(trx => {
       return trx
         .insert({
           team: "Customer Services",
-          leader: `${firstname} ${lastname}`,
-          members: [[`${firstname} ${lastname}`, email]]
+          leader: `${firstname} ${lastname}`
+        })
+        .into(`${account.toLowerCase()}_teams`);
+    });
+    const teammembertrx = await db.transaction(trx => {
+      return trx
+        .where("team", "Customer Services")
+        .update({
+          members: [`${firstname} ${lastname}`]
         })
         .into(`${account.toLowerCase()}_teams`);
     });
