@@ -20,7 +20,6 @@ const handleSearchRequest = async (req, res, db) => {
     date_range
   } = req.body;
   try {
-    console.log("RECEIVED", req.body);
     const today = new Date();
     const searchdaterange =
       date_range == "" ? ["2018-01-01T23:59:59.999Z", today] : date_range;
@@ -45,7 +44,6 @@ const handleSearchRequest = async (req, res, db) => {
       .where("status", "like", status ? status : "%")
       .where("created_at", ">", searchdaterange[0])
       .where("created_at", "<", searchdaterange[1]);
-    console.log("FOUND", results);
     res.json(results);
   } catch (err) {
     console.log(err);

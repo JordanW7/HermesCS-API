@@ -14,6 +14,10 @@ const handleRegister = async (req, res, db, bcrypt) => {
         })
         .into("databaselist");
     });
+  } catch (err) {
+    res.status(400).json("account exists");
+  }
+  try {
     const addRequestsTable = await db.schema.createTable(
       `${account.toLowerCase()}_requests`,
       table => {
@@ -33,11 +37,10 @@ const handleRegister = async (req, res, db, bcrypt) => {
         table.string("assign_team");
         table.string("priority");
         table.string("details");
-        table.string("attachments");
         table.string("status");
         table.string("comments");
-        table.string("user");
-        table.timestamps();
+        table.string("created_by");
+        table.timestamps("created_at");
       }
     );
     const addUserTable = await db.schema.createTable(
@@ -74,23 +77,16 @@ const handleRegister = async (req, res, db, bcrypt) => {
         table.string("email");
       }
     );
-    const addTeamAssignmentsTable = await db.schema.createTable(
-      `${account.toLowerCase()}_teamassignments`,
-      table => {
-        table.increments();
-        table.string("assignment");
-      }
-    );
     const teamtrx = await db.transaction(trx => {
       return trx
         .insert({
-          team: account,
+          team: "Customer Services",
           fullname: `${firstname} ${lastname}`,
           email: email.toLowerCase()
         })
-        .into(`${account.toLowerCase}_teams`);
+        .into(`${account.toLowerCase()}_teams`);
     });
-    res.status(200).json(account);
+    res.status(200).json("success");
   } catch (err) {
     console.log(err);
     res.status(400).json("unable to register");

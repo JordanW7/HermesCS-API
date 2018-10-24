@@ -4,7 +4,8 @@ const handleRequestGet = async (req, res, db) => {
     const request = await db
       .select("*")
       .from(`${account.toLowerCase()}_requests`)
-      .where({ id });
+      .where({ id })
+      .orderBy("created_at", "DESC");
     const comments = await db
       .select("*")
       .from(`${account.toLowerCase()}_${id}_comments`);
