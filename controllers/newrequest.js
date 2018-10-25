@@ -57,7 +57,7 @@ const handleNewRequest = async (req, res, db) => {
         })
         .into(`${account}_requests`);
     });
-    const newID = request;
+    const newID = request[0];
     const addCommentsTable = await db.schema.createTable(
       `${account.toLowerCase()}_${newID}_comments`,
       table => {

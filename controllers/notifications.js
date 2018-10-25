@@ -12,7 +12,7 @@ const handleNotificationsGet = async (req, res, db) => {
 };
 
 const handleNotificationsDel = async (req, res, db) => {
-  const { id, assign_person, account } = req.params;
+  const { id, assign_person, account } = req.body;
   try {
     const notifications = await db
       .from(`${account.toLowerCase()}_notifications`)
@@ -21,7 +21,7 @@ const handleNotificationsDel = async (req, res, db) => {
       .del();
     res.json("removed");
   } catch (err) {
-    res.status(400).json("error getting notifications");
+    res.status(400).json("error deleting notifications");
   }
 };
 

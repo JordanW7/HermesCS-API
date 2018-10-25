@@ -121,12 +121,13 @@ const handleRequestUpdate = async (req, res, db) => {
               address: request[0].address,
               type: request[0].type,
               topic: request[0].topic,
-              assign_person: request[0].assign_person,
-              assign_team: request[0].assign_team,
-              priority: request[0].priority,
+              assign_person: assign_person
+                ? assign_person
+                : request[0].assign_person,
+              assign_team: assign_team ? assign_team : request[0].assign_team,
+              priority: priority ? priority : request[0].priority,
               details: request[0].details,
-              attachments: request[0].attachments,
-              status: request[0].status,
+              status: status ? status : request[0].status,
               created_by: request[0].created_by,
               created_at: request[0].created_at,
               reference: id,
