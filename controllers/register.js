@@ -43,6 +43,33 @@ const handleRegister = async (req, res, db, bcrypt) => {
         table.timestamps("created_at");
       }
     );
+    const addNotificationsTable = await db.schema.createTable(
+      `${account.toLowerCase()}_notifications`,
+      table => {
+        table.increments();
+        table.string("firstname");
+        table.string("lastname");
+        table.string("account");
+        table.string("mobile");
+        table.string("home");
+        table.string("twitter");
+        table.string("facebook");
+        table.string("email");
+        table.string("address");
+        table.string("type");
+        table.string("topic");
+        table.string("assign_person");
+        table.string("assign_team");
+        table.string("priority");
+        table.string("details");
+        table.string("status");
+        table.string("comments");
+        table.string("created_by");
+        table.timestamps("created_at");
+        table.string("reference");
+        table.string("alert_time");
+      }
+    );
     const addUserTable = await db.schema.createTable(
       `${account.toLowerCase()}_users`,
       table => {

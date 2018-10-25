@@ -17,6 +17,7 @@ const profile = require("./controllers/profile");
 const requests = require("./controllers/requests");
 const newrequest = require("./controllers/newrequest");
 const searchrequests = require("./controllers/searchrequests");
+const notifications = require("./controllers/notifications");
 const teams = require("./controllers/teams");
 
 //Change for deploy
@@ -44,6 +45,13 @@ app.use(bodyParser.json());
 app.get("/profile/:account/:id", auth.requireAuth, (req, res) => {
   profile.handleProfileGet(req, res, db);
 });
+app.get(
+  "/notifications/:account/:assign_person",
+  auth.requireAuth,
+  (req, res) => {
+    notifications.handleNotificationsGet(req, res, db);
+  }
+);
 app.get("/requests/:account/:id/", auth.requireAuth, (req, res) => {
   requests.handleRequestGet(req, res, db);
 });
@@ -70,6 +78,9 @@ app.post("/newrequest", auth.requireAuth, (req, res) => {
 });
 app.post("/searchrequests", auth.requireAuth, (req, res) => {
   searchrequests.handleSearchRequest(req, res, db);
+});
+app.post("/notifications", auth.requireAuth, (req, res) => {
+  notifications.handleNotificationsDel(req, res, db);
 });
 
 const port = process.env.PORT || 3000;

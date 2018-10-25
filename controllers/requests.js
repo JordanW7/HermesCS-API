@@ -4,8 +4,7 @@ const handleRequestGet = async (req, res, db) => {
     const request = await db
       .select("*")
       .from(`${account.toLowerCase()}_requests`)
-      .where({ id })
-      .orderBy("created_at", "DESC");
+      .where({ id });
     const comments = await db
       .select("*")
       .from(`${account.toLowerCase()}_${id}_comments`);
@@ -26,12 +25,10 @@ const handleRequestGet = async (req, res, db) => {
         assign_team: request[0].assign_team,
         priority: request[0].priority,
         details: request[0].details,
-        attachments: request[0].attachments,
         status: request[0].status,
         comments: comments,
         created_by: request[0].created_by,
-        created_at: request[0].created_at,
-        updated_at: request[0].updated_at
+        created_at: request[0].created_at
       };
       res.json(response);
     } else {
@@ -103,16 +100,39 @@ const handleRequestUpdate = async (req, res, db) => {
       updateAddComment(db, account, id, comments, team, user);
       //If assign_person is unassigned, skip this step
       if (assign_person !== "unassigned") {
+        const request = await db
+          .select("*")
+          .from(`${account.toLowerCase()}_requests`)
+          .where({ id })
+          .orderBy("created_at", "DESC");
+        if (!request.length) {
+          return res.status(400).json("error updating request");
+        }
         const addUserNotification = await db.transaction(trx => {
           return trx
-            .where("team", assign_team)
-            .where("firstname", assign_person.match(/\S+/g)[0])
-            .where("lastname", assign_person.match(/\S+/g)[1])
-            .update({
-              notifications: db.raw("array_append(notifications, ?)", [id])
+            .insert({
+              firstname: request[0].firstname,
+              lastname: request[0].lastname,
+              mobile: request[0].mobile,
+              home: request[0].home,
+              twitter: request[0].twitter,
+              facebook: request[0].facebook,
+              email: request[0].email,
+              address: request[0].address,
+              type: request[0].type,
+              topic: request[0].topic,
+              assign_person: request[0].assign_person,
+              assign_team: request[0].assign_team,
+              priority: request[0].priority,
+              details: request[0].details,
+              attachments: request[0].attachments,
+              status: request[0].status,
+              created_by: request[0].created_by,
+              created_at: request[0].created_at,
+              reference: id,
+              alert_time: new Date()
             })
-            .returning("notifications")
-            .into(`${account.toLowerCase()}_users`);
+            .into(`${account}_notifications`);
         });
       }
     }

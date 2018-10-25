@@ -73,14 +73,29 @@ const handleNewRequest = async (req, res, db) => {
     }
     const addUserNotification = await db.transaction(trx => {
       return trx
-        .where("team", assign_team)
-        .where("firstname", assign_person.match(/\S+/g)[0])
-        .where("lastname", assign_person.match(/\S+/g)[1])
-        .update({
-          notifications: db.raw("array_append(notifications, ?)", [newID])
+        .insert({
+          firstname,
+          lastname,
+          account: customer_account,
+          mobile,
+          home,
+          twitter,
+          facebook,
+          email,
+          address,
+          type,
+          topic,
+          assign_person,
+          assign_team,
+          priority,
+          details,
+          status,
+          created_by,
+          created_at: new Date(),
+          reference: newID,
+          alert_time: new Date()
         })
-        .returning("notifications")
-        .into(`${account.toLowerCase()}_users`);
+        .into(`${account}_notifications`);
     });
     res.json(request);
   } catch (err) {
