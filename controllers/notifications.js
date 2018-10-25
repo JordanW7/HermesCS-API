@@ -38,7 +38,8 @@ const handleNotificationsTeamGet = async (req, res, db) => {
       extreme: extreme.length,
       high: high.length,
       medium: medium.length,
-      low: low.length
+      low: low.length,
+      total: extreme.length + high.length + medium.length + low.length
     };
     res.json(response);
   } catch (err) {
