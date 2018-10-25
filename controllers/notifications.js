@@ -27,5 +27,5 @@ const handleNotificationsDel = async (req, res, db) => {
 
 module.exports = {
   handleNotificationsGet,
-  handleCommentsDel
+  handleNotificationsDel
 };
