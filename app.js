@@ -52,6 +52,13 @@ app.get(
     notifications.handleNotificationsGet(req, res, db);
   }
 );
+app.get(
+  "/notifications-team/:account/:assign_team",
+  auth.requireAuth,
+  (req, res) => {
+    notifications.handleNotificationsTeamGet(req, res, db);
+  }
+);
 app.get("/requests/:account/:id/", auth.requireAuth, (req, res) => {
   requests.handleRequestGet(req, res, db);
 });

@@ -11,6 +11,42 @@ const handleNotificationsGet = async (req, res, db) => {
   }
 };
 
+const handleNotificationsTeamGet = async (req, res, db) => {
+  const { assign_team, account } = req.params;
+  try {
+    const extreme = await db
+      .select("*")
+      .from(`${account.toLowerCase()}_requests`)
+      .where({ assign_team })
+      .where({ priority: "extreme" });
+    const high = await db
+      .select("*")
+      .from(`${account.toLowerCase()}_requests`)
+      .where({ assign_team })
+      .where({ priority: "high" });
+    const medium = await db
+      .select("*")
+      .from(`${account.toLowerCase()}_requests`)
+      .where({ assign_team })
+      .where({ priority: "medium" });
+    const low = await db
+      .select("*")
+      .from(`${account.toLowerCase()}_requests`)
+      .where({ assign_team })
+      .where({ priority: "low" });
+    const response = {
+      extreme: extreme.length,
+      high: high.length,
+      medium: medium.length,
+      low: low.length
+    };
+    res.json(response);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json("error getting notifications");
+  }
+};
+
 const handleNotificationsDel = async (req, res, db) => {
   const { id, assign_person, account } = req.body;
   try {
@@ -27,5 +63,6 @@ const handleNotificationsDel = async (req, res, db) => {
 
 module.exports = {
   handleNotificationsGet,
-  handleNotificationsDel
+  handleNotificationsDel,
+  handleNotificationsTeamGet
 };
