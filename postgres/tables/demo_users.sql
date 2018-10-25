@@ -9,7 +9,6 @@ CREATE TABLE demo_users (
     access text NOT NULL,
     team text NOT NULL,
     notifications text[],
-    assignments text[]
 );
 
 COMMIT;

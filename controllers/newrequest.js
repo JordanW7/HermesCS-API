@@ -68,6 +68,21 @@ const handleNewRequest = async (req, res, db) => {
         table.timestamp("created_at");
       }
     );
+    if (!assign_person) {
+      return res.json(request);
+    }
+    const addUserNotification = await db.transaction(trx => {
+      return trx
+        .where("team", assign_team)
+        .where("firstname", assign_person.match(/\S+/g)[0])
+        .where("lastname", assign_person.match(/\S+/g)[1])
+        .update({
+          notifications: db.raw("array_append(notifications, ?)", [newID])
+        })
+        .returning("notifications")
+        .into(`${account.toLowerCase()}_users`);
+    });
+    console.log("notify", addUserNotification);
     res.json(request);
   } catch (err) {
     console.log(err);
