@@ -8,7 +8,7 @@ CREATE TABLE demo_users (
     hash varchar(100) NOT NULL,
     access text NOT NULL,
     team text NOT NULL,
-    notifications text[],
+    notifications text[]
 );
 
 COMMIT;

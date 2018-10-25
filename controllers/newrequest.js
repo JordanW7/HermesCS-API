@@ -68,7 +68,7 @@ const handleNewRequest = async (req, res, db) => {
         table.timestamp("created_at");
       }
     );
-    if (!assign_person) {
+    if (!assign_person || assign_person === "unassigned") {
       return res.json(request);
     }
     const addUserNotification = await db.transaction(trx => {
@@ -82,7 +82,6 @@ const handleNewRequest = async (req, res, db) => {
         .returning("notifications")
         .into(`${account.toLowerCase()}_users`);
     });
-    console.log("notify", addUserNotification);
     res.json(request);
   } catch (err) {
     console.log(err);

@@ -95,14 +95,26 @@ const handleRequestUpdate = async (req, res, db) => {
         request[0].assign_team
       }' to '${assign_team}'.`;
       updateAddComment(db, account, id, comments, team, user);
-      //TO DO: Also add team/user notification
     }
     if (request[0].assign_person != assign_person && assign_person) {
       let comments = `[CHANGED ASSIGNED PERSON] from '${
         request[0].assign_person
       }' to '${assign_person}'.`;
       updateAddComment(db, account, id, comments, team, user);
-      //Also add team/user notification
+      //If assign_person is unassigned, skip this step
+      if (assign_person !== "unassigned") {
+        const addUserNotification = await db.transaction(trx => {
+          return trx
+            .where("team", assign_team)
+            .where("firstname", assign_person.match(/\S+/g)[0])
+            .where("lastname", assign_person.match(/\S+/g)[1])
+            .update({
+              notifications: db.raw("array_append(notifications, ?)", [id])
+            })
+            .returning("notifications")
+            .into(`${account.toLowerCase()}_users`);
+        });
+      }
     }
     if (request[0].status != status && status) {
       let comments = `[CHANGED STATUS] from '${
