@@ -19,6 +19,8 @@ const newrequest = require("./controllers/newrequest");
 const searchrequests = require("./controllers/searchrequests");
 const notifications = require("./controllers/notifications");
 const teams = require("./controllers/teams");
+const users = require("./controllers/users");
+const settings = require("./controllers/settings");
 
 //Change for deploy
 const db = knex({
@@ -65,6 +67,9 @@ app.get("/requests/:account/:id/", auth.requireAuth, (req, res) => {
 app.get("/teams/:account", auth.requireAuth, (req, res) => {
   teams.handleTeamsGet(req, res, db);
 });
+app.get("/users/:account", auth.requireAuth, (req, res) => {
+  users.handleUsersGet(req, res, db);
+});
 app.post("/register", (req, res) => {
   register.handleRegister(req, res, db, bcrypt);
 });
@@ -88,6 +93,21 @@ app.post("/searchrequests", auth.requireAuth, (req, res) => {
 });
 app.post("/notifications", auth.requireAuth, (req, res) => {
   notifications.handleNotificationsDel(req, res, db);
+});
+app.post("/settings/updateprofile", (req, res) => {
+  settings.handleUpdateProfile(req, res, db, bcrypt);
+});
+app.post("/settings/addteam", (req, res) => {
+  settings.handleAddTeam(req, res, db, bcrypt);
+});
+app.post("/settings/modifyteam", (req, res) => {
+  settings.handleModifyTeam(req, res, db, bcrypt);
+});
+app.post("/settings/adduser", (req, res) => {
+  settings.handleAddUser(req, res, db, bcrypt);
+});
+app.post("/settings/modifyuser", (req, res) => {
+  settings.handleModifyUser(req, res, db, bcrypt);
 });
 
 const port = process.env.PORT || 3000;
