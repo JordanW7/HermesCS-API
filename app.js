@@ -98,16 +98,16 @@ app.post("/settings/updateprofile", (req, res) => {
   settings.handleUpdateProfile(req, res, db, bcrypt);
 });
 app.post("/settings/addteam", (req, res) => {
-  settings.handleAddTeam(req, res, db, bcrypt);
+  settings.handleAddTeam(req, res, db);
 });
 app.post("/settings/modifyteam", (req, res) => {
-  settings.handleModifyTeam(req, res, db, bcrypt);
+  settings.handleModifyTeam(req, res, db);
 });
 app.post("/settings/adduser", (req, res) => {
   settings.handleAddUser(req, res, db, bcrypt);
 });
 app.post("/settings/modifyuser", (req, res) => {
-  settings.handleModifyUser(req, res, db, bcrypt);
+  settings.handleModifyUser(req, res, db);
 });
 
 const port = process.env.PORT || 3000;

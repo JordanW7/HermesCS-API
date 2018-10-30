@@ -91,7 +91,7 @@ const handleRegister = async (req, res, db, bcrypt) => {
           lastname: lastname,
           email: email.toLowerCase(),
           hash: hash,
-          access: "admin",
+          access: "owner",
           team: "Customer Services"
         })
         .into(`${account.toLowerCase()}_users`);
