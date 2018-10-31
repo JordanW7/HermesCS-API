@@ -140,8 +140,15 @@ const handleModifyUser = async (req, res, db) => {
       });
       return res.status(200).json("user updated");
     }
-    //Make new team for user changes
-    return;
+    const userdetails = modifyuser.match(/\S+/g);
+    const usertrx = await db.transaction(trx => {
+      return trx
+        .update({ team: newteam })
+        .where({ firstname: userdetails[0] })
+        .where({ lastname: userdetails[0] })
+        .into(`${account.toLowerCase()}_users`);
+    });
+    return res.status(200).json("user updated");
   } catch (err) {
     res.status(400).json("error");
   }

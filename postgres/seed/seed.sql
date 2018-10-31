@@ -1,6 +1,6 @@
 insert into databaselist (displayname, account, owner, created_at) values ('Demo Company','demo','HermesCS','1995-01-04 09:08:07');
-insert into demo_teams (team, leader, members) values ('Customer Services', 'Demo Admin','{"Demo User","Demo Admin"}');
-insert into demo_teams (team, leader, members) values ('Operations', 'James Matthew','{"James Matthew","Peter Gold"}');
+insert into demo_teams (team, leader, members) values ('Customer Services', 'Demo Admin');
+insert into demo_teams (team, leader, members) values ('Operations', 'James Matthew');
 insert into demo_users (firstname, lastname, email, hash, access, team, status) values ('Demo', 'Admin', 'a@a.com', '$2a$10$WAK21U0LWl7C//jJ.DOB2uPP1DJQh7KUDgasdyQeGzkop2Pzl8W7u', 'owner', 'Customer Services','active');
 insert into demo_users (firstname, lastname, email, hash, access, team, status) values ('Demo', 'User', 'b@b.com', '$2a$10$WAK21U0LWl7C//jJ.DOB2uPP1DJQh7KUDgasdyQeGzkop2Pzl8W7u', 'agent', 'Customer Services','active');
 insert into demo_users (firstname, lastname, email, hash, access, team, status) values ('Peter', 'Gold', 'c@c.com', '$2a$10$WAK21U0LWl7C//jJ.DOB2uPP1DJQh7KUDgasdyQeGzkop2Pzl8W7u', 'agent', 'Operations','active');

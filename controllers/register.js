@@ -80,7 +80,6 @@ const handleRegister = async (req, res, db, bcrypt) => {
         table.string("hash");
         table.string("access");
         table.string("team");
-        table.specificType("notifications", "TEXT[]");
       }
     );
     const usertrx = await db.transaction(trx => {
