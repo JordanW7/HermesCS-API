@@ -101,15 +101,36 @@ const handleModifyTeam = async (req, res, db) => {
   }
 };
 
-const handleAddUser = async (req, res, db) => {
+const handleAddUser = async (db, bcrypt, req, res) => {
   const { account, user, newuser, team, email, password } = req.body;
   try {
     const access = checkUserAccess(account, user);
     if (access !== "owner") {
       return res.status(400).json("invalid access");
     }
-    //Check the user doesn't already exist
-    //Add new user
+    const userdetails = newuser.match(/\S+/g);
+    const userexist = await db
+      .select("*")
+      .from(`${account.toLowerCase()}_users`)
+      .where({ firstname: userdetails[0] })
+      .where({ lastname: userdetails[1] });
+    if (userexist) {
+      return res.status(400).json("already exists");
+    }
+    const hash = bcrypt.hashSync(newPassword);
+    const usertrx = await db.transaction(trx => {
+      return trx
+        .insert({
+          firstname: userdetails[0],
+          lastname: userdetails[1],
+          team: team,
+          email: email,
+          hash: hash,
+          access: "agent",
+          status: "active"
+        })
+        .into(`${account.toLowerCase()}_users`);
+    });
     return res.status(200).json("user added");
   } catch (err) {
     res.status(400).json("error");
