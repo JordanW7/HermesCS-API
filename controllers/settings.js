@@ -42,7 +42,7 @@ const handleUpdateProfile = async (req, res, db, bcrypt) => {
 
 const handleAddTeam = async (req, res, db) => {
   const { account, user, team, leader } = req.body;
-  if (!account || !user || !team || !leader) {
+  if (!account || !user || !team || !leader || !leaderemail) {
     return res.status(400).json("invalid request");
   }
   try {
@@ -64,6 +64,12 @@ const handleAddTeam = async (req, res, db) => {
           leader: leader
         })
         .into(`${account.toLowerCase()}_teams`);
+    });
+    const usertrx = await db.transaction(trx => {
+      return trx
+        .where("email", "=", leaderemail.toLowerCase())
+        .update({ team })
+        .into(`${account.toLowerCase()}_users`);
     });
     return res.status(200).json("team added");
   } catch (err) {
