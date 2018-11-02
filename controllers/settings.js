@@ -1,15 +1,13 @@
-const checkUserAccess = async (account, user) => {
-  if (!account || !user) {
+const checkUserAccess = async (account, useremail, db) => {
+  if (!account || !useremail) {
     return "invalid request";
   }
   try {
-    const userdetails = user.match(/\S+/g);
     const access = await db
       .select("access")
       .from(`${account.toLowerCase()}_users`)
-      .where({ firstname: userdetails[0] })
-      .where({ lastname: userdetails[1] });
-    return access;
+      .where({ email: useremail });
+    return access[0].access;
   } catch (err) {
     return "error";
   }
@@ -48,7 +46,7 @@ const handleAddTeam = async (req, res, db) => {
     return res.status(400).json("invalid request");
   }
   try {
-    const access = checkUserAccess(account, user);
+    const access = checkUserAccess(account, user, db);
     if (access !== "owner") {
       return res.status(400).json("invalid access");
     }
@@ -79,7 +77,7 @@ const handleModifyTeam = async (req, res, db) => {
     return res.status(400).json("invalid request");
   }
   try {
-    const access = checkUserAccess(account, user);
+    const access = checkUserAccess(account, user, db);
     if (access !== "owner") {
       return res.status(400).json("invalid access");
     }
@@ -96,27 +94,41 @@ const handleModifyTeam = async (req, res, db) => {
 };
 
 const handleAddUser = async (req, res, db, bcrypt) => {
-  const { account, user, newuser, team, email, password } = req.body;
+  const {
+    account,
+    user,
+    newuserfirstname,
+    newuserlastname,
+    team,
+    email,
+    password
+  } = req.body;
   try {
-    const access = checkUserAccess(account, user);
+    const access = await checkUserAccess(account, user, db);
     if (access !== "owner") {
       return res.status(400).json("invalid access");
     }
-    const userdetails = newuser.match(/\S+/g);
     const userexist = await db
       .select("*")
       .from(`${account.toLowerCase()}_users`)
-      .where({ firstname: userdetails[0] })
-      .where({ lastname: userdetails[1] });
-    if (userexist) {
+      .where({ firstname: newuserfirstname })
+      .where({ lastname: newuserlastname });
+    if (userexist[0]) {
       return res.status(400).json("already exists");
     }
-    const hash = bcrypt.hashSync(newPassword);
+    const emailexist = await db
+      .select("*")
+      .from(`${account.toLowerCase()}_users`)
+      .where({ email });
+    if (emailexist[0]) {
+      return res.status(400).json("email already exists");
+    }
+    const hash = bcrypt.hashSync(password);
     const usertrx = await db.transaction(trx => {
       return trx
         .insert({
-          firstname: userdetails[0],
-          lastname: userdetails[1],
+          firstname: newuserfirstname,
+          lastname: newuserlastname,
           team: team,
           email: email,
           hash: hash,
@@ -137,12 +149,12 @@ const handleModifyUser = async (req, res, db) => {
     return res.status(400).json("invalid request");
   }
   try {
-    const access = checkUserAccess(account, user);
+    const access = checkUserAccess(account, user, db);
     if (access !== "owner") {
       return res.status(400).json("invalid access");
     }
     if (status) {
-      if (checkUserAccess(account, modifyuser) === "owner") {
+      if (checkUserAccess(account, modifyuser, db) === "owner") {
         return res.status(400).json("unable to change");
       }
       const userdetails = modifyuser.match(/\S+/g);
