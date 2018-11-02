@@ -70,6 +70,9 @@ app.get("/teams/:account", auth.requireAuth, (req, res) => {
 app.get("/users/:account", auth.requireAuth, (req, res) => {
   users.handleUsersGet(req, res, db);
 });
+app.get("/users/:account/:team", auth.requireAuth, (req, res) => {
+  users.handleTeamUsersGet(req, res, db);
+});
 app.post("/register", (req, res) => {
   register.handleRegister(req, res, db, bcrypt);
 });

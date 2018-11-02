@@ -111,7 +111,7 @@ const handleDeleteTeam = async (req, res, db) => {
     }
     const usercheck = await db
       .select("*")
-      .from(`${account.toLowerCase()}_teams`)
+      .from(`${account.toLowerCase()}_users`)
       .where({ team });
     if (usercheck[0]) {
       return res.status(400).json("team members still exist");
@@ -120,6 +120,7 @@ const handleDeleteTeam = async (req, res, db) => {
       .from(`${account.toLowerCase()}_teams`)
       .where({ team })
       .del();
+    console.log(request);
     return res.status(200).json("team deleted");
   } catch (err) {
     res.status(400).json("error");
@@ -207,15 +208,15 @@ const handleModifyUser = async (req, res, db) => {
       .select("*")
       .from(`${account.toLowerCase()}_teams`)
       .where({ leader: fullname });
-    if (teamleadcheck[0]) {
-      return res.status(400).json("user is teamleader");
-    }
     const usertrx = await db.transaction(trx => {
       return trx
         .update({ team: newteam })
         .where({ email: modifyuser })
         .into(`${account.toLowerCase()}_users`);
     });
+    if (teamleadcheck[0]) {
+      return res.status(400).json("user is teamleader");
+    }
     return res.status(200).json("user updated");
   } catch (err) {
     res.status(400).json("error");
