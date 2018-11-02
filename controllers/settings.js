@@ -46,7 +46,7 @@ const handleAddTeam = async (req, res, db) => {
     return res.status(400).json("invalid request");
   }
   try {
-    const access = checkUserAccess(account, user, db);
+    const access = await checkUserAccess(account, user, db);
     if (access !== "owner") {
       return res.status(400).json("invalid access");
     }
@@ -77,7 +77,7 @@ const handleModifyTeam = async (req, res, db) => {
     return res.status(400).json("invalid request");
   }
   try {
-    const access = checkUserAccess(account, user, db);
+    const access = await checkUserAccess(account, user, db);
     if (access !== "owner") {
       return res.status(400).json("invalid access");
     }
@@ -144,36 +144,43 @@ const handleAddUser = async (req, res, db, bcrypt) => {
 };
 
 const handleModifyUser = async (req, res, db) => {
-  const { account, user, modifyuser, newteam, status } = req.body;
+  const { account, user, modifyuser, newteam, status, fullname } = req.body;
   if (!account || !user || !modifyuser || !newteam) {
     return res.status(400).json("invalid request");
   }
   try {
-    const access = checkUserAccess(account, user, db);
+    const access = await checkUserAccess(account, user, db);
     if (access !== "owner") {
       return res.status(400).json("invalid access");
     }
     if (status) {
-      if (checkUserAccess(account, modifyuser, db) === "owner") {
+      const userselection = await checkUserAccess(account, modifyuser, db);
+      if (userselection === "owner") {
         return res.status(400).json("unable to change");
       }
-      const userdetails = modifyuser.match(/\S+/g);
       const usertrx = await db.transaction(trx => {
         return trx
           .update({ team: newteam })
           .update({ status: status })
-          .where({ firstname: userdetails[0] })
-          .where({ lastname: userdetails[1] })
+          .where({ email: modifyuser })
           .into(`${account.toLowerCase()}_users`);
       });
       return res.status(200).json("user updated");
     }
-    const userdetails = modifyuser.match(/\S+/g);
+    if (!fullname) {
+      return res.status(400).json("invalid request");
+    }
+    const teamleadcheck = await db
+      .select("*")
+      .from(`${account.toLowerCase()}_teams`)
+      .where({ leader: fullname });
+    if (teamleadcheck[0]) {
+      return res.status(400).json("user is teamleader");
+    }
     const usertrx = await db.transaction(trx => {
       return trx
         .update({ team: newteam })
-        .where({ firstname: userdetails[0] })
-        .where({ lastname: userdetails[1] })
+        .where({ email: modifyuser })
         .into(`${account.toLowerCase()}_users`);
     });
     return res.status(200).json("user updated");
