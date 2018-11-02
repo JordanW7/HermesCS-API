@@ -94,19 +94,19 @@ app.post("/searchrequests", auth.requireAuth, (req, res) => {
 app.post("/notifications", auth.requireAuth, (req, res) => {
   notifications.handleNotificationsDel(req, res, db);
 });
-app.post("/settings/updateprofile", (req, res) => {
+app.post("/settings/updateprofile", auth.requireAuth, (req, res) => {
   settings.handleUpdateProfile(req, res, db, bcrypt);
 });
-app.post("/settings/addteam", (req, res) => {
+app.post("/settings/addteam", auth.requireAuth, (req, res) => {
   settings.handleAddTeam(req, res, db);
 });
-app.post("/settings/modifyteam", (req, res) => {
+app.post("/settings/modifyteam", auth.requireAuth, (req, res) => {
   settings.handleModifyTeam(req, res, db);
 });
-app.post("/settings/adduser", (req, res) => {
+app.post("/settings/adduser", auth.requireAuth, (req, res) => {
   settings.handleAddUser(req, res, db, bcrypt);
 });
-app.post("/settings/modifyuser", (req, res) => {
+app.post("/settings/modifyuser", auth.requireAuth, (req, res) => {
   settings.handleModifyUser(req, res, db);
 });
 
