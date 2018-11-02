@@ -31,7 +31,7 @@ const createSession = async (user, account) => {
   }
 };
 
-const handleSignin = async (db, bcrypt, req, res) => {
+const handleSignin = async (req, res, db, bcrypt) => {
   const { account, firstname, lastname, email, password } = req.body;
   if (!account || !email || !password) {
     return Promise.reject("incorrect form submission");
@@ -74,7 +74,7 @@ const signinAuthentication = async (req, res, db, bcrypt) => {
       });
     }
     //Person has not sent a token, check their credentials
-    const data = await handleSignin(db, bcrypt, req, res);
+    const data = await handleSignin(req, res, db, bcrypt);
     //If credentials are valid, create a new session.
     if (data.id && data.email && req.body.account) {
       const session = await createSession(data, req.body.account.toLowerCase());

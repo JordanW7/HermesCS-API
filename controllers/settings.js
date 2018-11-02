@@ -15,28 +15,22 @@ const checkUserAccess = async (account, user) => {
   }
 };
 
-const handleUpdateProfile = async (db, bcrypt, req, res) => {
-  const {
-    currentPassword,
-    newPassword,
-    account,
-    firstname,
-    lastname
-  } = req.body;
-  if (!currentPassword || !newPassword || !account || !user_email) {
+const handleUpdateProfile = async (req, res, db, bcrypt) => {
+  const { currentPassword, newPassword, account, email } = req.body;
+  if (!currentPassword || !newPassword || !account || !email) {
     return res.status(400).json("invalid request");
   }
   try {
     const data = await db
       .select("email", "hash")
       .from(`${account.toLowerCase()}_users`)
-      .where("email", "=", user_email.toLowerCase());
-    const isValid = bcrypt.compareSync(password, data[0].hash);
+      .where("email", "=", email.toLowerCase());
+    const isValid = bcrypt.compareSync(currentPassword, data[0].hash);
     if (isValid) {
       const usertrx = await db.transaction(trx => {
         const hash = bcrypt.hashSync(newPassword);
         return trx
-          .where("email", "=", user_email.toLowerCase())
+          .where("email", "=", email.toLowerCase())
           .update({ hash: hash })
           .into(`${account.toLowerCase()}_users`);
       });
@@ -101,7 +95,7 @@ const handleModifyTeam = async (req, res, db) => {
   }
 };
 
-const handleAddUser = async (db, bcrypt, req, res) => {
+const handleAddUser = async (req, res, db, bcrypt) => {
   const { account, user, newuser, team, email, password } = req.body;
   try {
     const access = checkUserAccess(account, user);
