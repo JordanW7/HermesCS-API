@@ -41,7 +41,7 @@ const handleUpdateProfile = async (req, res, db, bcrypt) => {
 };
 
 const handleAddTeam = async (req, res, db) => {
-  const { account, user, team, leader } = req.body;
+  const { account, user, team, leader, leaderemail } = req.body;
   if (!account || !user || !team || !leader || !leaderemail) {
     return res.status(400).json("invalid request");
   }
@@ -54,7 +54,7 @@ const handleAddTeam = async (req, res, db) => {
       .select("*")
       .from(`${account.toLowerCase()}_teams`)
       .where("team", "=", team.toLowerCase());
-    if (teamcheck) {
+    if (teamcheck[0]) {
       return res.status(400).json("already exists");
     }
     const teamtrx = await db.transaction(trx => {
