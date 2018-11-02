@@ -139,7 +139,7 @@ const handleAddUser = async (db, bcrypt, req, res) => {
 
 const handleModifyUser = async (req, res, db) => {
   const { account, user, modifyuser, newteam, status } = req.body;
-  if (!account || !user || !modifyuser || (!newteam && !status)) {
+  if (!account || !user || !modifyuser || !newteam) {
     return res.status(400).json("invalid request");
   }
   try {
@@ -154,10 +154,11 @@ const handleModifyUser = async (req, res, db) => {
       const userdetails = modifyuser.match(/\S+/g);
       const usertrx = await db.transaction(trx => {
         return trx
+          .update({ team: newteam })
           .update({ status: status })
           .where({ firstname: userdetails[0] })
-          .where({ lastname: userdetails[0] })
-          .into(`${account.toLowerCase()}_teams`);
+          .where({ lastname: userdetails[1] })
+          .into(`${account.toLowerCase()}_users`);
       });
       return res.status(200).json("user updated");
     }
@@ -166,7 +167,7 @@ const handleModifyUser = async (req, res, db) => {
       return trx
         .update({ team: newteam })
         .where({ firstname: userdetails[0] })
-        .where({ lastname: userdetails[0] })
+        .where({ lastname: userdetails[1] })
         .into(`${account.toLowerCase()}_users`);
     });
     return res.status(200).json("user updated");
