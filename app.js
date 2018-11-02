@@ -103,6 +103,9 @@ app.post("/settings/addteam", auth.requireAuth, (req, res) => {
 app.post("/settings/modifyteam", auth.requireAuth, (req, res) => {
   settings.handleModifyTeam(req, res, db);
 });
+app.post("/settings/deleteteam", auth.requireAuth, (req, res) => {
+  settings.handleDeleteTeam(req, res, db);
+});
 app.post("/settings/adduser", auth.requireAuth, (req, res) => {
   settings.handleAddUser(req, res, db, bcrypt);
 });

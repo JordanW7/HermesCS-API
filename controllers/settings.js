@@ -99,6 +99,33 @@ const handleModifyTeam = async (req, res, db) => {
   }
 };
 
+const handleDeleteTeam = async (req, res, db) => {
+  const { account, user, team } = req.body;
+  if (!account || !user || !team) {
+    return res.status(400).json("invalid request");
+  }
+  try {
+    const access = await checkUserAccess(account, user, db);
+    if (access !== "owner") {
+      return res.status(400).json("invalid access");
+    }
+    const usercheck = await db
+      .select("*")
+      .from(`${account.toLowerCase()}_teams`)
+      .where({ team });
+    if (usercheck[0]) {
+      return res.status(400).json("team members still exist");
+    }
+    const request = await db
+      .from(`${account.toLowerCase()}_teams`)
+      .where({ team })
+      .del();
+    return res.status(200).json("team deleted");
+  } catch (err) {
+    res.status(400).json("error");
+  }
+};
+
 const handleAddUser = async (req, res, db, bcrypt) => {
   const {
     account,
@@ -200,5 +227,6 @@ module.exports = {
   handleAddTeam,
   handleModifyTeam,
   handleAddUser,
-  handleModifyUser
+  handleModifyUser,
+  handleDeleteTeam
 };
