@@ -10,6 +10,9 @@ const handleProfileGet = async (req, res, db) => {
       .from("databaselist")
       .where({ account });
     if (user.length && dbdata.length) {
+      if (user[0].status !== "active") {
+        return res.status(400).json("Not active");
+      }
       const response = {
         id: user[0].id,
         email: user[0].email,

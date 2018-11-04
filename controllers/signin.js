@@ -47,15 +47,21 @@ const handleSignin = async (req, res, db, bcrypt) => {
         .select("*")
         .from(`${account.toLowerCase()}_users`)
         .where("email", "=", email.toLowerCase());
+      if (user[0].status !== "active") {
+        console.log("NOT");
+        return Promise.reject("not active");
+      }
       return Promise.resolve({
         email: user[0].email,
         id: user[0].id,
         account: account
       });
     } else {
+      console.log("BAD CRED");
       return Promise.reject("wrong credentials");
     }
   } catch (err) {
+    console.log("ERROR");
     return res.status(400).json("unable to get user");
   }
 };
