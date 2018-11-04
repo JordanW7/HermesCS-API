@@ -48,7 +48,6 @@ const handleSignin = async (req, res, db, bcrypt) => {
         .from(`${account.toLowerCase()}_users`)
         .where("email", "=", email.toLowerCase());
       if (user[0].status !== "active") {
-        console.log("NOT");
         return Promise.reject("not active");
       }
       return Promise.resolve({
@@ -57,7 +56,6 @@ const handleSignin = async (req, res, db, bcrypt) => {
         account: account
       });
     } else {
-      console.log("BAD CRED");
       return Promise.reject("wrong credentials");
     }
   } catch (err) {

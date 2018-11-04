@@ -11,7 +11,7 @@ const handleProfileGet = async (req, res, db) => {
       .where({ account });
     if (user.length && dbdata.length) {
       if (user[0].status !== "active") {
-        return res.status(400).json("Not active");
+        return res.status(400).json("not active");
       }
       const response = {
         id: user[0].id,
@@ -25,7 +25,7 @@ const handleProfileGet = async (req, res, db) => {
       };
       res.json(response);
     } else {
-      res.status(400).json("Not found");
+      res.status(400).json("not found");
     }
   } catch (err) {
     res.status(400).json("error getting user");

@@ -8,6 +8,7 @@ CREATE TABLE demo_users (
     hash varchar(100) NOT NULL,
     access text NOT NULL,
     status text NOT NULL,
+    forgotcode text,
     team text NOT NULL
 );
 

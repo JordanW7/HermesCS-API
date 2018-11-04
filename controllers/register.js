@@ -1,3 +1,15 @@
+// const nodemailer = require('nodemailer');
+// const smtpTransport = require('nodemailer-smtp-transport');
+
+// const mailtransporter = nodemailer.createTransport(smtpTransport({
+//   service: 'gmail',
+//   host: 'smtp.gmail.com',
+//   auth: {
+//     user: process.env.MAIL_USER,
+//     pass: process.env.MAIL_PASS
+//   }
+// }));
+
 const handleRegister = async (req, res, db, bcrypt) => {
   const { account, firstname, lastname, email, password } = req.body;
   if (!account || !firstname || !lastname || !email || !password) {
@@ -80,6 +92,8 @@ const handleRegister = async (req, res, db, bcrypt) => {
         table.string("hash");
         table.string("access");
         table.string("team");
+        table.string("status");
+        table.string("forgotcode");
       }
     );
     const usertrx = await db.transaction(trx => {
@@ -91,7 +105,8 @@ const handleRegister = async (req, res, db, bcrypt) => {
           email: email.toLowerCase(),
           hash: hash,
           access: "owner",
-          team: "Customer Services"
+          team: "Customer Services",
+          status: "active"
         })
         .into(`${account.toLowerCase()}_users`);
     });
@@ -120,6 +135,19 @@ const handleRegister = async (req, res, db, bcrypt) => {
         })
         .into(`${account.toLowerCase()}_teams`);
     });
+    // const mailOptions = {
+    //   from: process.env.MAIL_USER,
+    //   to: email,
+    //   subject: 'Sending Email using Node.js',
+    //   text: 'That was easy!'
+    // };
+    // mailtransporter.sendMail(mailOptions, (error, info) => {
+    //   if (error) {
+    //     console.log(error);
+    //   } else {
+    //     console.log('Email sent: ' + info.response);
+    //   }
+    // });
     res.status(200).json("success");
   } catch (err) {
     console.log(err);
@@ -128,5 +156,5 @@ const handleRegister = async (req, res, db, bcrypt) => {
 };
 
 module.exports = {
-  handleRegister: handleRegister
+  handleRegister
 };
