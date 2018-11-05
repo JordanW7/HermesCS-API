@@ -1,7 +1,9 @@
 const handleUsersGet = async (req, res, db) => {
   const { account } = req.params;
   try {
-    const request = await db.select("*").from(`${account.toLowerCase()}_users`);
+    const request = await db
+      .select("firstname", "lastname", "email", "team", "access", "status")
+      .from(`${account.toLowerCase()}_users`);
     if (request.length) {
       res.json(request);
     } else {
