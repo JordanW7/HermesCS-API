@@ -27,14 +27,15 @@ const handleForgotPassword = async (req, res, db, bcrypt) => {
         .where({ email })
         .update({ forgotcode });
     });
-    if (!response[0]) {
-      return res.status(200).json("complete");
+    if (!response) {
+      console.log("RESP", response);
+      return res.status(400).json("does not exist");
     }
     const mailOptions = {
       from: process.env.MAIL_USER,
       to: email,
       subject: "Did you forget your password?",
-      text: `We recently received a request to reset your password. Your reset code is: ${forgotcode}`
+      text: `We recently received a request to reset your password. Your reset code is: ${code}`
     };
     mailtransporter.sendMail(mailOptions, (error, info) => {
       if (error) {
@@ -43,22 +44,25 @@ const handleForgotPassword = async (req, res, db, bcrypt) => {
       return res.status(200).json("complete");
     });
   } catch (err) {
-    return res.status(400).json("error");
+    return res.status(400).json("does not exist");
   }
 };
 
 const handleForgotPasswordCodeSubmit = async (req, res, db, bcrypt) => {
   const { code, newpassword, account, email } = req.body;
-  if (!code || !newpassword || !account || !email) {
+  if (!code || !account || !email) {
     return res.status(400).json("incorrect form submission");
   }
   try {
     const data = await db
       .select("forgotcode")
-      .from(`${account.toLowerCase()}_requests`)
+      .from(`${account.toLowerCase()}_users`)
       .where({ email });
     const isValid = bcrypt.compareSync(code, data[0].forgotcode);
     if (isValid) {
+      if (!newpassword) {
+        return res.status(200).json("match");
+      }
       hash = bcrypt.hashSync(newpassword);
       const response = await db.transaction(trx => {
         return trx
@@ -68,7 +72,7 @@ const handleForgotPasswordCodeSubmit = async (req, res, db, bcrypt) => {
       });
       return res.status(200).json("changed");
     }
-    return res.status(400).json("error");
+    return res.status(400).json("no match");
   } catch (err) {
     return res.status(400).json("error");
   }

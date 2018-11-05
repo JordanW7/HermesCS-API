@@ -80,10 +80,10 @@ app.post("/register", (req, res) => {
 app.post("/signin", (req, res) => {
   signin.signinAuthentication(req, res, db, bcrypt);
 });
-app.post("/forgot", auth.requireAuth, (req, res) => {
+app.post("/forgot", (req, res) => {
   forgot.handleForgotPassword(req, res, db, bcrypt);
 });
-app.post("/forgotcodesubmit", auth.requireAuth, (req, res) => {
+app.post("/forgotcodesubmit", (req, res) => {
   forgot.handleForgotPasswordCodeSubmit(req, res, db, bcrypt);
 });
 app.post("/signout", auth.requireAuth, (req, res) => {
