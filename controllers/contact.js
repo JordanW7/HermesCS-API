@@ -20,6 +20,12 @@ const handleContact = (req, res, db) => {
   try {
     const mailOptions1 = {
       from: process.env.MAIL_USER,
+      to: email,
+      subject: "Automatic Message: Email Received",
+      text: `Hi ${name}, this is just to let you know we have received your message. We will be in contact as soon as possible.`
+    };
+    const mailOptions2 = {
+      from: process.env.MAIL_USER,
       to: process.env.MAIL_USER,
       subject: "Email Received",
       text: `Name: ${name} | Account: ${account} | Email: ${email} | Details: ${details}`
@@ -28,19 +34,14 @@ const handleContact = (req, res, db) => {
       if (error) {
         return res.status(400).json("error");
       }
+      mailtransporter.sendMail(mailOptions2, (error, info) => {
+        if (error) {
+          return res.status(400).json("error");
+        } else {
+          return res.status(200).json("sent");
+        }
+      });
     });
-    const mailOptions2 = {
-      from: process.env.MAIL_USER,
-      to: email,
-      subject: "Automatic Message: Email Received",
-      text: `Hi ${name}, this is just to let you know we have received your message. We will be in contact as soon as possible.`
-    };
-    mailtransporter.sendMail(mailOptions2, (error, info) => {
-      if (error) {
-        return res.status(400).json("error");
-      }
-    });
-    return res.status(200).json("sent");
   } catch (err) {
     return res.status(400).json("error");
   }
