@@ -28,7 +28,6 @@ const handleForgotPassword = async (req, res, db, bcrypt) => {
         .update({ forgotcode });
     });
     if (!response) {
-      console.log("RESP", response);
       return res.status(400).json("does not exist");
     }
     const mailOptions = {

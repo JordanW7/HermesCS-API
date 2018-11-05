@@ -22,6 +22,7 @@ const teams = require("./controllers/teams");
 const users = require("./controllers/users");
 const settings = require("./controllers/settings");
 const forgot = require("./controllers/forgot");
+const contact = require("./controllers/contact");
 
 //Change for deploy
 const db = knex({
@@ -85,6 +86,9 @@ app.post("/forgot", (req, res) => {
 });
 app.post("/forgotcodesubmit", (req, res) => {
   forgot.handleForgotPasswordCodeSubmit(req, res, db, bcrypt);
+});
+app.post("/contact", (req, res) => {
+  contact.handleContact(req, res, db);
 });
 app.post("/signout", auth.requireAuth, (req, res) => {
   signout.handleSignout(req, res);
