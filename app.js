@@ -29,7 +29,6 @@ const db = knex({
   connection: process.env.POSTGRES_URI
 });
 
-//Change for deploy
 const whitelist = [process.env.FRONTEND_URI];
 const corsOptions = {
   origin: function(origin, callback) {
