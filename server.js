@@ -38,8 +38,7 @@ const corsOptions = {
     if (whitelist.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      callback(null, true);
-      // callback(new Error("Not allowed by CORS"));
+      callback(new Error("Not allowed by CORS"));
     }
   }
 };
@@ -956,8 +955,6 @@ app.post(
     settings.handleModifyUser(req, res, db);
   }
 );
-
-app.get("/", (req, res) => res.send("Hello"));
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Server is listening on port ${port}.`));
