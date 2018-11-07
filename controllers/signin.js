@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken");
 const redis = require("redis");
-//May require changing for deploy.
 const redisClient = redis.createClient(process.env.REDIS_URI);
 
 const signToken = (id, account) => {

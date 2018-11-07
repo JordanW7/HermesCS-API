@@ -24,14 +24,13 @@ const settings = require("./controllers/settings");
 const forgot = require("./controllers/forgot");
 const contact = require("./controllers/contact");
 
-//Change for deploy
 const db = knex({
   client: "pg",
   connection: process.env.POSTGRES_URI
 });
 
 //Change for deploy
-const whitelist = ["http://localhost:3001"];
+const whitelist = [process.env.FRONTEND_URI];
 const corsOptions = {
   origin: function(origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {

@@ -34,6 +34,7 @@ services:
     environment:
       POSTGRES_URI: postgres://admin:password@postgres:5432/hermes-cs
       REDIS_URI: redis://redis:6379
+      FRONTEND_URI: http://localhost:3001
       MAIL_USER: hermescs.help@gmail.com
       MAIL_PASS: sonjag6200@
     links:
