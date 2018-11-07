@@ -26,10 +26,10 @@ const contact = require("./controllers/contact");
 
 const db = knex({
   client: "pg",
-  connection: process.env.POSTGRES_URI
+  connection: process.env.DATABASE_URL
 });
 
-const whitelist = [process.env.FRONTEND_URI];
+const whitelist = [process.env.FRONTEND_URL];
 const corsOptions = {
   origin: function(origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
