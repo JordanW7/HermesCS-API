@@ -2,7 +2,7 @@
   "name": "hermescs-api",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
     "precommit": "pretty-quick --staged",
     "test": "jest",
