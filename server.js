@@ -29,7 +29,7 @@ const db = knex({
   connection: process.env.DATABASE_URL
 });
 
-const whitelist = [process.env.FRONTEND_URL];
+const whitelist = ["https://hermescs-53659.firebaseapp.com"];
 const corsOptions = {
   origin: function(origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
