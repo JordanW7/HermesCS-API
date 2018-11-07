@@ -32,7 +32,7 @@ const createSession = async (user, account) => {
 };
 
 const handleSignin = async (req, res, db, bcrypt) => {
-  const { account, firstname, lastname, email, password } = req.body;
+  const { account, email, password } = req.body;
   if (!account || !email || !password) {
     return Promise.reject("incorrect form submission");
   }
@@ -59,7 +59,6 @@ const handleSignin = async (req, res, db, bcrypt) => {
       return Promise.reject("wrong credentials");
     }
   } catch (err) {
-    console.log("ERROR");
     return res.status(400).json("unable to get user");
   }
 };

@@ -79,8 +79,17 @@ const updateAddComment = async (db, account, id, comments, team, user) => {
 };
 
 const handleRequestUpdate = async (req, res, db) => {
-  const { id, user, assign_team, assign_person, status, priority } = req.body;
-  const { account, team } = user;
+  const {
+    id,
+    userfirstname,
+    userlastname,
+    account,
+    userteam,
+    assign_team,
+    assign_person,
+    status,
+    priority
+  } = req.body;
   try {
     //Compare the provided data with the current data, adding a comment for any changes.
     const request = await db
