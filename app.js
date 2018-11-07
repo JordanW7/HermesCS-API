@@ -279,7 +279,25 @@ app.post(
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
-    signin.signinAuthentication(req, res, db, bcrypt);
+    signin.handleSignin(req, res, db, bcrypt);
+  }
+);
+
+app.post(
+  "/auth",
+  [
+    check("authorization")
+      .trim()
+      .not()
+      .isEmpty()
+      .escape()
+  ],
+  (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+    signin.handleAuth(req, res, db, bcrypt);
   }
 );
 
@@ -526,6 +544,7 @@ app.post(
       .escape(),
     check("email")
       .trim()
+      .optional({ checkFalsy: true })
       .isEmail()
       .normalizeEmail()
       .escape(),
@@ -614,6 +633,7 @@ app.post(
       .escape(),
     check("email")
       .trim()
+      .optional({ checkFalsy: true })
       .isEmail()
       .normalizeEmail()
       .escape(),
@@ -634,11 +654,11 @@ app.post(
       .escape(),
     check("status")
       .trim()
-      .isIn(["unassigned", "current", "complete", ""])
+      .isIn(["unassigned", "current", "complete", "", "%"])
       .escape(),
     check("priority")
       .trim()
-      .isIn(["low", "medium", "high", "extreme", ""])
+      .isIn(["low", "medium", "high", "extreme", "", "%"])
       .escape(),
     check("created_by")
       .trim()

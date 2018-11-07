@@ -33,9 +33,6 @@ const createSession = async (user, account) => {
 
 const handleSignin = async (req, res, db, bcrypt) => {
   const { account, email, password } = req.body;
-  if (!account || !email || !password) {
-    return Promise.reject("incorrect form submission");
-  }
   try {
     const data = await db
       .select("email", "hash")
@@ -48,48 +45,39 @@ const handleSignin = async (req, res, db, bcrypt) => {
         .from(`${account.toLowerCase()}_users`)
         .where("email", "=", email.toLowerCase());
       if (user[0].status !== "active") {
-        return Promise.reject("not active");
+        return res.status(400).json("not active");
       }
-      return Promise.resolve({
+      const data = {
         email: user[0].email,
         id: user[0].id,
         account: account
-      });
-    } else {
-      return Promise.reject("wrong credentials");
+      };
+      const session = await createSession(data, account.toLowerCase());
+      return res.status(200).json(session);
     }
+    return res.status(400).json("wrong credentials");
   } catch (err) {
     return res.status(400).json("unable to get user");
   }
 };
 
-const signinAuthentication = async (req, res, db, bcrypt) => {
+const handleAuth = async (req, res, db, bcrypt) => {
   const { authorization } = req.headers;
   try {
-    //Has the person sent a token, if so check the token
-    if (authorization) {
-      return redisClient.hgetall(authorization, (err, reply) => {
-        if (reply) {
-          return res.status(200).json(reply);
-        } else {
-          return res.status(400).json(err);
-        }
-      });
-    }
-    //Person has not sent a token, check their credentials
-    const data = await handleSignin(req, res, db, bcrypt);
-    //If credentials are valid, create a new session.
-    if (data.id && data.email && req.body.account) {
-      const session = await createSession(data, req.body.account.toLowerCase());
-      return res.status(200).json(session);
-    }
-    return res.json(Promise.reject(data));
+    return redisClient.hgetall(authorization, (err, reply) => {
+      if (reply) {
+        return res.status(200).json(reply);
+      } else {
+        return res.status(400).json("error");
+      }
+    });
   } catch (err) {
-    res.status(400).json(err);
+    res.status(400).json("error");
   }
 };
 
 module.exports = {
-  signinAuthentication: signinAuthentication,
-  redisClient: redisClient
+  handleAuth,
+  handleSignin,
+  redisClient
 };
