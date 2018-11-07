@@ -33,7 +33,7 @@ const handleSearchRequest = async (req, res, db) => {
       .where("home", "like", home ? home : "%")
       .where("twitter", "like", twitter ? twitter : "%")
       .where("facebook", "like", facebook ? facebook : "%")
-      .where("email", "like", email ? email : "%")
+      .where("email", "like", email === "@" ? "%" : email)
       .where("address", "like", address ? address : "%")
       .where("type", "like", type ? type : "%")
       .where("topic", "like", topic ? topic : "%")

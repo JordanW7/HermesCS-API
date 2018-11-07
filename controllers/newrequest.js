@@ -32,6 +32,7 @@ const handleNewRequest = async (req, res, db) => {
     return res.status(400).json("incorrect form submission");
   }
   try {
+    console.log("EMAIL", email);
     const request = await db.transaction(trx => {
       return trx
         .returning("id")
@@ -43,7 +44,7 @@ const handleNewRequest = async (req, res, db) => {
           home,
           twitter,
           facebook,
-          email,
+          email: email === "@" ? "" : email,
           address,
           type,
           topic,
@@ -81,7 +82,7 @@ const handleNewRequest = async (req, res, db) => {
           home,
           twitter,
           facebook,
-          email,
+          email: email === "@" ? "" : email,
           address,
           type,
           topic,

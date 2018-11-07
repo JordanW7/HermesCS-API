@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt-nodejs");
 const cors = require("cors");
 const knex = require("knex");
 const morgan = require("morgan");
-const { check, validationResult } = require("express-validator/check");
+const { check, oneOf, validationResult } = require("express-validator/check");
 
 let dump = require("pg");
 const app = express();
@@ -542,10 +542,9 @@ app.post(
     check("facebook")
       .trim()
       .escape(),
+    oneOf([check("email").isEmpty(), check("email").isEmail()]),
     check("email")
       .trim()
-      .optional({ checkFalsy: true })
-      .isEmail()
       .normalizeEmail()
       .escape(),
     check("address")
@@ -633,8 +632,6 @@ app.post(
       .escape(),
     check("email")
       .trim()
-      .optional({ checkFalsy: true })
-      .isEmail()
       .normalizeEmail()
       .escape(),
     check("address")
