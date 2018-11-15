@@ -1,6 +1,8 @@
 HermesCS
 A Web App built for first-class Customer Service by JordanFWilson.com
 
+This app is a ticketing tool for operating a Contact Centre. HermesCS helps manage customer info and record, manage and complete customer service requests in a fast and modern way. The app will work both in the office or out in the field on any kind of device.
+
 User Guide:
 
 New Request Page:
