@@ -15,9 +15,6 @@ const mailtransporter = nodemailer.createTransport(
 
 const handleForgotPassword = async (req, res, db, bcrypt) => {
   const { account, email } = req.body;
-  if (!account || !email) {
-    return res.status(400).json("incorrect form submission");
-  }
   try {
     const code = crypto.randomBytes(15).toString("hex");
     const forgotcode = bcrypt.hashSync(code);

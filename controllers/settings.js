@@ -1,7 +1,4 @@
 const checkUserAccess = async (account, useremail, db) => {
-  if (!account || !useremail) {
-    return "invalid request";
-  }
   try {
     const access = await db
       .select("access")
@@ -15,9 +12,6 @@ const checkUserAccess = async (account, useremail, db) => {
 
 const handleUpdateProfile = async (req, res, db, bcrypt) => {
   const { currentPassword, newPassword, account, email } = req.body;
-  if (!currentPassword || !newPassword || !account || !email) {
-    return res.status(400).json("invalid request");
-  }
   try {
     const data = await db
       .select("email", "hash")
@@ -42,9 +36,6 @@ const handleUpdateProfile = async (req, res, db, bcrypt) => {
 
 const handleAddTeam = async (req, res, db) => {
   const { account, user, team, leader, leaderemail } = req.body;
-  if (!account || !user || !team || !leader || !leaderemail) {
-    return res.status(400).json("invalid request");
-  }
   try {
     const access = await checkUserAccess(account, user, db);
     if (access !== "owner") {
@@ -79,9 +70,6 @@ const handleAddTeam = async (req, res, db) => {
 
 const handleModifyTeam = async (req, res, db) => {
   const { account, user, leader, team } = req.body;
-  if (!account || !user || !leader || !team) {
-    return res.status(400).json("invalid request");
-  }
   try {
     const access = await checkUserAccess(account, user, db);
     if (access !== "owner") {
@@ -101,9 +89,6 @@ const handleModifyTeam = async (req, res, db) => {
 
 const handleDeleteTeam = async (req, res, db) => {
   const { account, user, team } = req.body;
-  if (!account || !user || !team) {
-    return res.status(400).json("invalid request");
-  }
   try {
     const access = await checkUserAccess(account, user, db);
     if (access !== "owner") {
@@ -179,9 +164,6 @@ const handleAddUser = async (req, res, db, bcrypt) => {
 
 const handleModifyUser = async (req, res, db) => {
   const { account, user, modifyuser, newteam, status, fullname } = req.body;
-  if (!account || !user || !modifyuser || !newteam) {
-    return res.status(400).json("invalid request");
-  }
   try {
     const access = await checkUserAccess(account, user, db);
     if (access !== "owner") {

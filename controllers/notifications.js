@@ -43,7 +43,6 @@ const handleNotificationsTeamGet = async (req, res, db) => {
     };
     res.json(response);
   } catch (err) {
-    console.log(err);
     res.status(400).json("error getting notifications");
   }
 };

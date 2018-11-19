@@ -14,9 +14,6 @@ const mailtransporter = nodemailer.createTransport(
 
 const handleContact = (req, res, db) => {
   const { name, email, account, details } = req.body;
-  if (!name || !email || !details) {
-    return res.status(400).json("incorrect form submission");
-  }
   try {
     const mailOptions1 = {
       from: process.env.MAIL_USER,

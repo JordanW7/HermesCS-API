@@ -19,20 +19,7 @@ const handleNewRequest = async (req, res, db) => {
     created_by,
     status
   } = req.body;
-  if (
-    !account ||
-    !type ||
-    !topic ||
-    !assign_team ||
-    !priority ||
-    !details ||
-    !status ||
-    !created_by
-  ) {
-    return res.status(400).json("incorrect form submission");
-  }
   try {
-    console.log("EMAIL", email);
     const request = await db.transaction(trx => {
       return trx
         .returning("id")
@@ -100,7 +87,6 @@ const handleNewRequest = async (req, res, db) => {
     });
     res.json(request);
   } catch (err) {
-    console.log(err);
     res.status(400).json("unable to add");
   }
 };

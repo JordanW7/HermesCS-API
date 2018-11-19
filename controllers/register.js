@@ -1,8 +1,5 @@
 const handleRegister = async (req, res, db, bcrypt) => {
   const { account, firstname, lastname, email, password } = req.body;
-  if (!account || !firstname || !lastname || !email || !password) {
-    return res.status(400).json("incorrect form submission");
-  }
   try {
     const acctrx = await db.transaction(trx => {
       return trx
